@@ -1,0 +1,118 @@
+/*
+  MaemYuk design tokens
+  Sumber: Figma "UI-Startup-MaemYuk", halaman Hi-fi (variabel dan Text Styles).
+  Catatan: variabel Figma "space/itrem-gap" ditulis typo di Figma, di sini dinormalkan jadi --space-item-gap.
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@700&family=Roboto+Condensed:wght@400;600;700&display=swap");
+
+:root {
+  /* Warna */
+  --color-brand: #0e7490;
+  --color-on-brand: #ffffff;
+  --color-bg-screen: #ffffff;
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+  --color-text-placeholder: #6b7280;
+  --color-text-discount: #c2410c;
+  --color-border-input: #6b7280;
+  --color-border-error: #b91c1c;
+
+  /* Jarak */
+  --space-screen-margin: 16px;
+  --space-screen-top: 48px;
+  --space-section-gap: 32px;
+  --space-card-gap: 16px;
+  --space-card-padding: 16px;
+  --space-field-padding: 16px;
+  --space-item-gap: 8px;
+  --space-icon-gap: 4px;
+  --space-8: 8px;
+  --space-16: 16px;
+
+  /* Radius */
+  --radius-8: 8px;
+  --radius-16: 16px;
+  --radius-999: 999px;
+
+  /* Font */
+  --font-heading: "Roboto", sans-serif;
+  --font-body: "Roboto Condensed", sans-serif;
+  --font-display: "Lobster", cursive;
+
+  /* Acuan lebar layar desain di Figma (semua frame 360 px) */
+  --design-width: 360px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg-screen);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+/* Text styles dari Figma */
+.text-heading1 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 32px;
+}
+
+.text-heading2 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 32px;
+}
+
+.text-heading3 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.text-body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.text-body-strong {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.text-caption {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.text-mini {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.text-diskon {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--color-text-discount);
+}
