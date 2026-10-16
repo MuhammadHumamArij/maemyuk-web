@@ -11,7 +11,7 @@ const router = useRouter()
 const rekomendasi = computed(() => products.filter((p) => ['ayam-goreng', 'risol', 'dimsum'].includes(p.id)))
 
 const preferensi = [
-  { label: 'Lokasi terdekat', ikons: 'ikons-lokasi-terdekat.svg', sort: 'terdekat' },
+  { label: 'Lokasi terdekat', icon: 'ikon-lokasi-terdekat.svg', sort: 'terdekat' },
   { label: 'Rating tertinggi', ikon: 'ikon-rating-tertinggi.svg', sort: 'rating' },
   { label: 'Banyak diminati', ikon: 'ikon-banyak-diminati.svg', sort: 'populer' },
 ]
@@ -27,21 +27,21 @@ const aneka = [
   <div class="container">
     <header class="top">
       <RouterLink to="/beranda">
-        <img :src="asset('icon/horizontal-logo-maemyuk.svg')" alt="MaemYuk, ke beranda" width="96" height="35" />
+        <img :src="asset('icons/horizontal-logo-maemyuk.svg')" alt="MaemYuk, ke beranda" width="96" height="35" />
       </RouterLink>
       <nav aria-label="Navigasi utama">
         <ul class="top__nav">
           <li>
             <RouterLink to="/keranjang" class="top__cart">
-              <img :src="asset('icon/ikon-cart.svg')" alt="Keranjang" width="19" height="19" />
+              <img :src="asset('icons/ikon-cart.svg')" alt="Keranjang" width="19" height="19" />
               <span v-if="cartCount" class="top__badge" aria-label="isi keranjang">{{ cartCount }}</span>
             </RouterLink>
           </li>
           <li>
-            <a href="#/beranda" @click.prevent><img :src="asset('icon/ikon-location.svg')" alt="Lokasi" width="15" height="22" /></a>
+            <a href="#/beranda" @click.prevent><img :src="asset('icons/ikon-location.svg')" alt="Lokasi" width="15" height="22" /></a>
           </li>
           <li>
-            <RouterLink to="/masuk"><img :src="asset('icon/ikon-user.svg')" alt="Akun" width="23" height="23" /></RouterLink>
+            <RouterLink to="/masuk"><img :src="asset('icons/ikon-user.svg')" alt="Akun" width="23" height="23" /></RouterLink>
           </li>
         </ul>
       </nav>
@@ -150,8 +150,10 @@ const aneka = [
 .pref,
 .aneka {
   display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
   margin-top: 12px;
+  align-items: stretch;
 }
 .pref {
   grid-template-columns: repeat(3, 1fr);
@@ -176,11 +178,13 @@ const aneka = [
   transform: translateY(-2px);
 }
 .kartu img {
-  width: 100%;
-  max-width: 83px;
-  height: auto;
+  display: block;
+  width: 83px;
+  height: 83px;
+  flex-shrink: 0;
   border-radius: var(--radius-16);
   object-fit: cover;
+  object-position: center;
 }
 .tombol-lebar {
   margin-top: 16px;
