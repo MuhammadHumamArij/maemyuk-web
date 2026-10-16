@@ -11,10 +11,11 @@ const router = useRouter()
 const rekomendasi = computed(() => products.filter((p) => ['ayam-goreng', 'risol', 'dimsum'].includes(p.id)))
 
 const preferensi = [
-  { label: 'Lokasi terdekat', icon: 'ikon-lokasi-terdekat.svg', sort: 'terdekat' },
+  { label: 'Lokasi terdekat', ikon: 'ikon-lokasi-terdekat.svg', sort: 'terdekat' },
   { label: 'Rating tertinggi', ikon: 'ikon-rating-tertinggi.svg', sort: 'rating' },
   { label: 'Banyak diminati', ikon: 'ikon-banyak-diminati.svg', sort: 'populer' },
 ]
+
 const aneka = [
   { label: 'Roti', gambar: 'roti.png', kategori: 'Roti' },
   { label: 'Mie Ayam', gambar: 'mie-ayam.png', kategori: 'Menu Ayam' },
@@ -61,7 +62,9 @@ const aneka = [
         <ul class="pref">
           <li v-for="p in preferensi" :key="p.sort">
             <RouterLink :to="{ path: '/katalog', query: { sort: p.sort } }" class="kartu">
-              <img :src="asset(`icon/${p.ikon}`)" alt="" width="69" height="69" />
+              
+              <img :src="asset(`icons/${p.ikon}`)" alt="" width="69" height="69" />
+
               <span>{{ p.label }}</span>
             </RouterLink>
           </li>
