@@ -245,8 +245,9 @@ function beliSekarang() {
   align-items: start;
 }
 .ulasan__komentar {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 16px;
+  margin-top: 4px;
 }
 .ulasan__avatar {
   background: #9ca3af;
