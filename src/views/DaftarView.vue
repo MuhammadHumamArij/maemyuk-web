@@ -1,5 +1,6 @@
+
 <script setup>
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref, computed, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import AppIcon from '../components/AppIcon.vue'
 import { asset } from '../utils'
@@ -7,6 +8,16 @@ import { asset } from '../utils'
 const router = useRouter()
 const form = reactive({ username: '', email: '', password: '', konfirmasi: '', peran: '' })
 const dicoba = ref(false)
+
+// Referensi untuk autofokus kolom username
+const usernameInput = ref(null)
+
+// Autofokus ke username setelah halaman selesai dimuat
+onMounted(() => {
+  nextTick(() => {
+    usernameInput.value?.focus()
+  })
+})
 
 const galat = computed(() => ({
   username: form.username.trim() === '' ? 'Username wajib diisi' : '',
@@ -44,7 +55,15 @@ function daftar() {
           <label for="username" class="label">Username:</label>
           <div class="field" :class="{ 'field--error': dicoba && galat.username }">
             <AppIcon name="user" :size="18" />
-            <input id="username" v-model="form.username" type="text" name="username" placeholder="Username" autocomplete="username" />
+            <input
+              id="username"
+              ref="usernameInput"
+              v-model="form.username"
+              type="text"
+              name="username"
+              placeholder="Username"
+              autocomplete="username"
+            />
           </div>
           <p v-if="dicoba && galat.username" class="error-text" role="alert">{{ galat.username }}</p>
         </div>
