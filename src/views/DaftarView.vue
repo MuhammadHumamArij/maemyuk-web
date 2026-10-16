@@ -27,10 +27,10 @@ function daftar() {
   <div class="daftar">
     <header class="daftar__hero">
       <RouterLink to="/masuk" class="daftar__back">
-        <img :src="asset('icon/ikon-chevron-left.svg')" alt="Kembali ke halaman masuk" width="15" height="26" />
+        <img :src="asset('icons/ikon-chevron-left.svg')" alt="Kembali ke halaman masuk" width="15" height="26" />
       </RouterLink>
       <RouterLink to="/beranda">
-        <img :src="asset('icon/white-logo-maemyuk.svg')" alt="MaemYuk, ke beranda" width="134" height="133" class="daftar__logo" />
+        <img :src="asset('icons/white-logo-maemyuk.svg')" alt="MaemYuk, ke beranda" width="134" height="133" class="daftar__logo" />
       </RouterLink>
       <p class="text-heading1">Selamat datang di MaemYuk</p>
     </header>
@@ -96,8 +96,8 @@ function daftar() {
 
       <p class="daftar__atau"><span>Atau</span></p>
       <div class="daftar__social">
-        <button type="button"><img :src="asset('icon/ikon-google.svg')" alt="Daftar dengan Google" width="32" height="32" /></button>
-        <button type="button"><img :src="asset('icon/ikon-facebook.svg')" alt="Daftar dengan Facebook" width="32" height="32" /></button>
+        <button type="button"><img :src="asset('icons/logo-google.svg')" alt="Daftar dengan Google" width="32" height="32" /></button>
+        <button type="button"><img :src="asset('icons/logo-facebook.svg')" alt="Daftar dengan Facebook" width="32" height="32" /></button>
       </div>
     </main>
   </div>
