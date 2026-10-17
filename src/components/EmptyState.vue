@@ -6,7 +6,7 @@ defineEmits(['reset'])
 
 <template>
   <section class="empty" role="status">
-    <img :src="asset('icon/ikon-triangle-danger.svg')" alt="" width="172" height="154" />
+    <img :src="asset('icons/ikon-triangle-danger.svg')" alt="" width="172" height="154" />
     <h1 class="text-heading2">Data Tidak Ditemukan</h1>
     <p>Coba ubah filter atau cari di area yang berbeda</p>
     <p class="muted">Tidak ada produk yang sesuai dengan pencarianmu saat ini</p>
