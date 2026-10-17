@@ -7,7 +7,7 @@ defineProps({ to: { type: String, required: true }, label: { type: String, defau
 <template>
   <header class="back-bar">
     <RouterLink :to="to" class="back-bar__back">
-      <img :src="asset('icon/ikon-chevron-left.svg')" :alt="label" width="15" height="26" />
+      <img :src="asset('icons/ikon-chevron-left.svg')" :alt="label" width="15" height="26" />
     </RouterLink>
     <div class="back-bar__body"><slot /></div>
   </header>
