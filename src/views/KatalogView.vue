@@ -111,7 +111,7 @@ const adaFilter = computed(() => q.value.trim() || kategoriAktif.value || urutan
           aria-controls="panel-urutan"
           @click="filterTerbuka = !filterTerbuka"
         >
-          <img :src="asset('icons/ikon-filter-tune.svg')" alt="Buka filter" width="32" height="32" />
+          <img :src="asset('icons/ikon-filter-tune-no-bg.svg')" alt="Buka filter" width="32" height="32" />
         </button>
       </div>
     </BackBar>
