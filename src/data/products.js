@@ -102,7 +102,7 @@ export const products = [
     jarak: 700,
     rating: 4.8,
     populer: 80,
-    gambar: 'pastel-isi.png',
+    gambar: 'pastel-Isi.png',
     alt: 'Pastel goreng isi sayur yang renyah',
     singkat: 'Pastel goreng isi sayur',
     deskripsi: deskripsiUmum('Pastel Sayur Renyah'),
