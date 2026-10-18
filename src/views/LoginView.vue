@@ -1,5 +1,6 @@
+
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import AppIcon from '../components/AppIcon.vue'
 import { asset } from '../utils'
@@ -8,6 +9,9 @@ const router = useRouter()
 const email = ref('')
 const password = ref('')
 const gagal = ref(false)
+
+// Referensi untuk autofokus kolom email
+const emailInput = ref(null)
 
 // Interaksi 1: tombol Masuk nonaktif sampai kedua field terisi.
 const bisaMasuk = computed(() => email.value.trim() !== '' && password.value !== '')
@@ -29,18 +33,34 @@ function masuk() {
 // Animasi pembuka: lingkaran membesar, logo muncul, lalu halaman login naik.
 // Hanya sekali per sesi dan dilewati bila pengguna meminta gerak dikurangi.
 const intro = ref(false)
+
 onMounted(() => {
   let sudah = false
+
   try {
     sudah = sessionStorage.getItem('maemyuk.intro') === '1'
     sessionStorage.setItem('maemyuk.intro', '1')
   } catch {
     /* tanpa storage, animasi tetap boleh jalan */
   }
-  const kurangiGerak = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-  if (sudah || kurangiGerak) return
+
+  const kurangiGerak = window.matchMedia?.(
+    '(prefers-reduced-motion: reduce)'
+  ).matches
+
+  // Jika animasi dilewati, langsung fokus ke email
+  if (sudah || kurangiGerak) {
+    nextTick(() => emailInput.value?.focus())
+    return
+  }
+
   intro.value = true
-  setTimeout(() => (intro.value = false), 2300)
+
+  // Fokus ke email setelah animasi pembuka selesai
+  setTimeout(() => {
+    intro.value = false
+    nextTick(() => emailInput.value?.focus())
+  }, 2300)
 })
 </script>
 
@@ -75,6 +95,7 @@ onMounted(() => {
           <label for="email" class="sr-only">Email</label>
           <input
             id="email"
+            ref="emailInput"
             v-model="email"
             type="email"
             name="email"
@@ -84,6 +105,7 @@ onMounted(() => {
             :aria-describedby="gagal ? 'pesan-galat' : undefined"
           />
         </div>
+
         <div class="field" :class="{ 'field--error': gagal }">
           <AppIcon name="key" :size="18" />
           <label for="password" class="sr-only">Password</label>
@@ -98,10 +120,12 @@ onMounted(() => {
             :aria-describedby="gagal ? 'pesan-galat' : undefined"
           />
         </div>
+
         <button type="submit" class="btn btn--primary" :disabled="!bisaMasuk">Masuk</button>
       </form>
 
       <p class="login__or"><span>Atau</span></p>
+
       <div class="login__social">
         <button type="button"><img :src="asset('icons/logo-google.svg')" alt="Masuk dengan Google" width="32" height="32" /></button>
         <button type="button"><img :src="asset('icons/logo-facebook.svg')" alt="Masuk dengan Facebook" width="32" height="32" /></button>
