@@ -8,8 +8,8 @@ Proyek ini adalah **Modul 7: Transformasi Desain Figma ke Prototipe Web Interakt
 | --- | --- |
 | Desain Figma | https://www.figma.com/design/8AKKdpCaWkA5L2PwUPxbRe/UI-Startup-MaemYuk?node-id=155-104 |
 | Repositori | https://github.com/MuhammadHumamArij/maemyuk-web.git|
-| Demo (GitHub Pages) | _isi setelah deploy_ |
-| PRD (PDF) | _isi tautan atau nama berkas PRD_ |
+| Demo (GitHub Pages) | https://muhammadhumamarij.github.io/maemyuk-web/ |
+| PRD (PDF) | PRD.md |
 
 ## Anggota tim
 
@@ -133,14 +133,12 @@ Contoh pesan commit: `feat: tambah filter kategori di halaman Katalog`, `fix: pe
 
 ## Kontribusi anggota
 
-> Isi tabel ini dari riwayat commit yang nyata. Perintah bantu: `git shortlog -sn` untuk jumlah commit per orang, dan `git log --author="Nama" --oneline` untuk daftar commit tiap anggota.
-
 | Anggota | Tugas | Bukti (branch, PR, atau commit) |
 | --- | --- | --- |
-| Muhammad Humam Arij | Penyiapan repo, kerangka proyek Vue, token desain, store keranjang, dan halaman Masuk, Katalog, Detail Produk, Keranjang, Checkout. Perbaikan aset dan ikon. Review PR milik Nafisa. | _isi tautan PR atau hash commit_ |
-| Nafisa | Halaman Daftar, Riwayat, Beranda, dan Konfirmasi. Koreksi data Figma (total Checkout Rp 19.500, label diskon Dimsum 44%). Penyusunan PRD. Review PR milik Humam. | _isi tautan PR atau hash commit_ |
+| Muhammad Humam Arij | Penyiapan repo, kerangka proyek Vue, token desain, store keranjang, dan halaman Masuk, Katalog, Detail Produk, Keranjang, Checkout. Perbaikan aset dan ikon. Review PR milik Nafisa. | humam/login humam/katalog humam/checkout humam/produk humam/keranjang humam/checkout humam/konfirmasi|
+| Nafisa | Halaman Daftar, Riwayat, Beranda, dan Konfirmasi. Koreksi data Figma (total Checkout Rp 19.500, label diskon Dimsum 44%). Penyusunan PRD. Review PR milik Humam. | nafisa/feat/prd nafisa/feat/beranda nafisa/feat/riwayat feat/login-auto-focus |
 
-Ringkasan jumlah commit (isi dari `git shortlog -sn`): _isi_
+Ringkasan jumlah commit (isi dari `git shortlog -sn`): 15
 
 ## Log prompt dan perbaikan
 
