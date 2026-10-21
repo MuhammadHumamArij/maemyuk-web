@@ -1,15 +1,20 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AppIcon from '../components/AppIcon.vue'
 import BackBar from '../components/BackBar.vue'
 import ProductRow from '../components/ProductRow.vue'
 import EmptyState from '../components/EmptyState.vue'
-import { products, kategori as daftarKategori, toko as dataToko } from '../data/products'
+import { kategori as daftarKategori, toko as dataToko } from '../data/products'
+import { productState, muatProduk } from '../productStore'
 import { asset, jarakText } from '../utils'
 
 const route = useRoute()
 const router = useRouter()
+
+onMounted(() => {
+  if (!productState.items.length) muatProduk()
+})
 
 // Interaksi 2: pencarian, kategori, urutan, dan tab Item/Toko, semuanya reaktif.
 
@@ -46,7 +51,7 @@ const urutOpsi = [
 
 const hasil = computed(() => {
   const kata = q.value.trim().toLowerCase()
-  let daftar = products.filter((p) => {
+  let daftar = productState.items.filter((p) => {
     const cocokKata = !kata || [p.nama, p.toko, p.kategori].some((t) => t.toLowerCase().includes(kata))
     const cocokKategori = !kategoriAktif.value || p.kategori === kategoriAktif.value
     return cocokKata && cocokKategori
@@ -151,7 +156,12 @@ const adaFilter = computed(() => q.value.trim() || kategoriAktif.value || urutan
     </div>
 
     <main>
-      <EmptyState v-if="!hasil.length" @reset="reset" />
+      <p v-if="productState.loading" class="muted" role="status">Memuat menu...</p>
+      <div v-else-if="productState.error" role="alert">
+        <p>{{ productState.error }}</p>
+        <button type="button" class="btn btn--secondary btn--sm" @click="muatProduk">Coba lagi</button>
+      </div>
+      <EmptyState v-else-if="!hasil.length" @reset="reset" />
 
       <template v-else>
         <h1 class="sr-only">Katalog Menu</h1>
