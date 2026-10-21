@@ -1,14 +1,19 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import AppIcon from '../components/AppIcon.vue'
 import ProductRow from '../components/ProductRow.vue'
-import { products } from '../data/products'
+import { productState,muatProduk } from '../productStore'
 import { cartCount } from '../store'
 import { asset } from '../utils'
 
 const router = useRouter()
-const rekomendasi = computed(() => products.filter((p) => ['ayam-goreng', 'risol', 'dimsum'].includes(p.id)))
+
+onMounted(() => {
+  if (!productState.items.length) muatProduk()
+})
+
+const rekomendasi = computed(() => productState.items.filter((p) => ['ayam-goreng', 'risol', 'dimsum'].includes(p.id)))
 
 const preferensi = [
   { label: 'Lokasi terdekat', ikon: 'ikon-lokasi-terdekat.svg', sort: 'terdekat' },
