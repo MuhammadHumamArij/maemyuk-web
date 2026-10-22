@@ -37,12 +37,8 @@ const write = (storage, key, value) => {
 const local = getStorage('localStorage')
 const session = getStorage('sessionStorage')
 
-// Isi awal keranjang sama dengan desain Figma (1x Klepon, 2x Coro, 3x Lemper).
-const defaultItems = () => [
-  { id: 'klepon', qty: 1, selected: true },
-  { id: 'coro', qty: 2, selected: true },
-  { id: 'lemper-ayam', qty: 3, selected: true },
-]
+// Keranjang kosong tanpa item default
+const defaultItems = () => []
 
 const saved = read(local, CART_KEY)
 export const cart = reactive({
