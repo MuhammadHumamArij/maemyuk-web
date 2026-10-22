@@ -1,15 +1,19 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import AppIcon from '../components/AppIcon.vue'
 import BackBar from '../components/BackBar.vue'
 import ProductRow from '../components/ProductRow.vue'
 import { lines, selectedLines, summary, setQty, removeItem, toggleSelected, cart } from '../store'
-import { products } from '../data/products'
+import { productState, muatProduk } from '../productStore'
 import { asset, groupByToko, rupiah } from '../utils'
+
+onMounted(() => {
+  if (!productState.items.length) muatProduk()
+})
 
 // Interaksi 3: jumlah, pilihan, dan total berubah langsung (state reaktif di store).
 const grup = computed(() => groupByToko(lines.value))
-const rekomendasi = computed(() => products.filter((p) => !cart.items.some((i) => i.id === p.id)).slice(0, 4))
+const rekomendasi = computed(() => productState.items.filter((p) => !cart.items.some((i) => i.id === p.id)).slice(0, 4))
 const jumlahTerpilih = computed(() => selectedLines.value.reduce((s, l) => s + l.qty, 0))
 </script>
 
@@ -58,7 +62,8 @@ const jumlahTerpilih = computed(() => selectedLines.value.reduce((s, l) => s + l
         </div>
       </section>
 
-      <section v-else class="kosong" role="status">
+      <p v-else-if="productState.loading" class="muted" role="status">Memuat keranjang...</p>
+      <section v-else-if="!productState.loading" class="kosong" role="status">
         <h2 class="text-heading3">Keranjangmu masih kosong</h2>
         <p class="muted">Yuk cari makanan surplus yang masih layak dan lebih hemat.</p>
         <RouterLink to="/katalog" class="btn btn--primary">Lihat Katalog</RouterLink>
