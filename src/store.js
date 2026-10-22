@@ -1,5 +1,6 @@
 import { reactive, computed, watch } from 'vue'
-import { getProduct, toko } from './data/products'
+import { toko } from './data/products'
+import { getProduct } from './productStore'
 
 const CART_KEY = 'maemyuk.cart.v1'
 const ORDER_KEY = 'maemyuk.order.v1'
@@ -45,7 +46,7 @@ const defaultItems = () => [
 
 const saved = read(local, CART_KEY)
 export const cart = reactive({
-  items: Array.isArray(saved?.items) ? saved.items.filter((i) => getProduct(i.id)) : defaultItems(),
+    items: Array.isArray(saved?.items) ? saved.items : defaultItems(),
   voucher: saved?.voucher ?? true,
 })
 export const order = reactive({ data: read(session, ORDER_KEY) })
@@ -117,7 +118,8 @@ const kodeToko = (nama) => {
   return `F${100 + h}-TPK-2022`
 }
 
-export function placeOrder({ nama, metode }) {
+// Menyusun data pesanan tanpa efek samping: keranjang belum dikosongkan.
+export function buildOrder({ nama, metode }) {
   const sel = selectedLines.value
   if (!sel.length) return null
   const total = summary.value
@@ -135,13 +137,19 @@ export function placeOrder({ nama, metode }) {
     }
     perToko.get(t).items.push({ nama: l.product.nama, qty: l.qty })
   }
-  order.data = {
-    nama,
-    metode,
-    total: total.total,
-    hemat: total.hemat,
-    toko: [...perToko.values()],
-  }
+  return { nama, metode, total: total.total, hemat: total.hemat, toko: [...perToko.values()] }
+}
+
+// Dipanggil setelah pesanan berhasil terkirim: simpan untuk halaman Konfirmasi, kosongkan keranjang.
+export function commitOrder(data) {
+  order.data = data
   cart.items = cart.items.filter((i) => !i.selected)
-  return order.data
+}
+
+// Pembungkus lama, dipertahankan sampai CheckoutView beralih ke buildOrder dan commitOrder.
+export function placeOrder(args) {
+  const data = buildOrder(args)
+  if (!data) return null
+  commitOrder(data)
+  return data
 }
