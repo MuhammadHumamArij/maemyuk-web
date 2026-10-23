@@ -8,6 +8,7 @@ import EmptyState from '../components/EmptyState.vue'
 import { kategori as daftarKategori, toko as dataToko } from '../data/products'
 import { productState, muatProduk } from '../productStore'
 import { asset, jarakText } from '../utils'
+import SkeletonRow from '../components/SkeletonRow.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -156,7 +157,12 @@ const adaFilter = computed(() => q.value.trim() || kategoriAktif.value || urutan
     </div>
 
     <main>
-      <p v-if="productState.loading" class="muted" role="status">Memuat menu...</p>
+      <template v-if="productState.loading">
+        <p class="sr-only" role="status">Memuat menu...</p>
+        <ul class="product-grid" aria-hidden="true">
+          <li v-for="n in 6" :key="n"><SkeletonRow /></li>
+        </ul>
+      </template>
       <div v-else-if="productState.error" role="alert">
         <p>{{ productState.error }}</p>
         <button type="button" class="btn btn--secondary btn--sm" @click="muatProduk">Coba lagi</button>
