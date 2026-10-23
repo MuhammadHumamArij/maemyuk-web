@@ -6,6 +6,7 @@ import ProductRow from '../components/ProductRow.vue'
 import { productState,muatProduk } from '../productStore'
 import { cartCount } from '../store'
 import { asset } from '../utils'
+import SkeletonRow from '../components/SkeletonRow.vue'
 
 const router = useRouter()
 
@@ -92,7 +93,17 @@ const aneka = [
       <section class="section" aria-labelledby="h-rek">
         <h2 id="h-rek" class="text-heading3">Rekomendasi makanan hari ini</h2>
         <p class="muted rek__sub">Nikmati makanan berkualitas dengan harga lebih hemat dan bantu kurangi limbah makanan</p>
-        <ul class="product-grid">
+        <template v-if="productState.loading">
+          <p class="sr-only" role="status">Memuat rekomendasi...</p>
+          <ul class="product-grid" aria-hidden="true">
+            <li v-for="n in 3" :key="n"><SkeletonRow /></li>
+          </ul>
+        </template>
+        <div v-else-if="productState.error" role="alert">
+          <p>{{ productState.error }}</p>
+          <button type="button" class="btn btn--secondary btn--sm" @click="muatProduk">Coba lagi</button>
+        </div>
+        <ul v-else class="product-grid">
           <li v-for="p in rekomendasi" :key="p.id"><ProductRow :product="p" /></li>
         </ul>
         <RouterLink to="/katalog" class="btn btn--secondary btn--sm tombol-lebar">Cari rekomendasi menu hari ini</RouterLink>
