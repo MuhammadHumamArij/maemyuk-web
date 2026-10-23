@@ -85,7 +85,10 @@ const jumlahTerpilih = computed(() => selectedLines.value.reduce((s, l) => s + l
       <section class="rek" aria-labelledby="h-rek">
         <div class="divider"></div>
         <h2 id="h-rek" class="text-heading3">Rekomendasi Menu Lain</h2>
-        <ul class="product-grid">
+        <ul v-if="productState.loading" class="product-grid" aria-hidden="true">
+          <li v-for="n in 2" :key="n"><SkeletonRow /></li>
+        </ul>
+        <ul v-else class="product-grid">
           <li v-for="p in rekomendasi" :key="p.id"><ProductRow :product="p" /></li>
         </ul>
       </section>
