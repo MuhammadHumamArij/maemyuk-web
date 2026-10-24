@@ -6,6 +6,7 @@ import ProductRow from '../components/ProductRow.vue'
 import { lines, selectedLines, summary, setQty, removeItem, toggleSelected, cart } from '../store'
 import { productState, muatProduk } from '../productStore'
 import { asset, groupByToko, rupiah } from '../utils'
+import SkeletonRow from '../components/SkeletonRow.vue'
 
 onMounted(() => {
   if (!productState.items.length) muatProduk()
@@ -62,7 +63,12 @@ const jumlahTerpilih = computed(() => selectedLines.value.reduce((s, l) => s + l
         </div>
       </section>
 
-      <p v-else-if="productState.loading" class="muted" role="status">Memuat keranjang...</p>
+      <section v-else-if="productState.loading" class="daftar" aria-label="Memuat keranjang">
+        <p class="sr-only" role="status">Memuat keranjang...</p>
+        <ul class="product-grid" aria-hidden="true">
+          <li v-for="n in 2" :key="n"><SkeletonRow /></li>
+        </ul>
+      </section>
       <section v-else-if="!productState.loading" class="kosong" role="status">
         <h2 class="text-heading3">Keranjangmu masih kosong</h2>
         <p class="muted">Yuk cari makanan surplus yang masih layak dan lebih hemat.</p>
