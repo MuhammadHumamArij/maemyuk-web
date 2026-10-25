@@ -74,7 +74,7 @@ Jika muncul galat `supabaseUrl is required`, berarti `.env.local` belum terbaca.
 
 ## Panduan untuk mentor: halaman dan fitur yang bisa dicoba
 
-Link live web: [ISI: link]. Alur utama: Masuk, Beranda, Katalog, Detail Produk, Keranjang, Checkout, Konfirmasi. Login hanya simulasi, jadi isi email berformat benar dan password minimal 6 karakter.
+Link live web: https://maemyuk.netlify.app/. Alur utama: Masuk, Beranda, Katalog, Detail Produk, Keranjang, Checkout, Konfirmasi. Login hanya simulasi, jadi isi email berformat benar dan password minimal 6 karakter.
 
 1. **Katalog (data dinamis, search, filter).** Ketik "ayam" di kolom cari, hasilnya 3 produk. Coba chip kategori, buka panel filter untuk mengurutkan (terdekat, rating, diminati), dan pindah ke tab Toko. Ketik kata yang tidak ada, misalnya "xyz", untuk melihat layar "Data Tidak Ditemukan" dan tombol Reset Pencarian.
 2. **Beranda.** Bagian "Rekomendasi makanan hari ini" diambil dari database.
