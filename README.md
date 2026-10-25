@@ -191,11 +191,11 @@ Contoh pesan commit: `feat: katalog memuat produk dari supabase`, `refactor: ker
 | Jaringan "Slow 4G" | Kerangka loading tampil di Katalog, Beranda, dan Keranjang |
 | Mode "Offline" | Pesan galat dan tombol Coba lagi tampil, data muncul setelah jaringan kembali |
 | Form Checkout | Nama kosong dan metode belum dipilih menampilkan pesan, nama 81 karakter ditolak, klik ganda hanya menyimpan satu pesanan, internet mati menampilkan toast gagal dan keranjang utuh, pesanan sukses muncul di tabel `orders` |
-| Link live web | [ISI: filter dan submit form berjalan tanpa galat] |
+| Link live web | https://maemyuk.netlify.app/ |
 
 ## Deploy
 
-Deploy memakai Netify. `vite.config.js` memakai `base: './'` dan router mode hash, jadi hasil build bisa dibuka tanpa pengaturan rute tambahan.
+Deploy memakai Netlify. `vite.config.js` memakai `base: './'` dan router mode hash, jadi hasil build bisa dibuka tanpa pengaturan rute tambahan.
 
 1. Impor repositori ke platform, pilih branch `main`.
 2. Perintah build `npm run build`, folder keluaran `dist`.
