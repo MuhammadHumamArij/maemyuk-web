@@ -2,77 +2,115 @@
 
 Prototipe web interaktif **MaemYuk**, platform yang mempertemukan UMKM kuliner dengan pembeli di sekitar untuk menjual makanan surplus di penghujung hari dengan harga lebih hemat, sekaligus membantu mengurangi food waste.
 
-Proyek ini adalah **Modul 7: Transformasi Desain Figma ke Prototipe Web Interaktif** dari program magang Vinix Batch 5, dikerjakan oleh **Kelompok 3 Peluru UT**. Desain bersumber dari hi-fi Modul 5, dan konversi HTML semantik Modul 6 dipakai sebagai kerangka konten.
+Proyek ini adalah **Modul 8: Data Dinamis dan Logika Aplikasi** dari program magang Vinix Batch 5, dikerjakan oleh **Kelompok 3 Peluru UT**. Modul ini melanjutkan prototipe Modul 7 (Transformasi Desain Figma ke Prototipe Web Interaktif): data produk kini diambil dari database Supabase, ada pencarian dan filter, form pesanan dengan validasi, serta kondisi tampilan untuk memuat, kosong, dan galat.
 
 | Informasi | Tautan |
 | --- | --- |
+| Link live web | [ISI: link Vercel/Netlify setelah deploy] |
+| Repositori | https://github.com/MuhammadHumamArij/maemyuk-web.git |
 | Desain Figma | https://www.figma.com/design/8AKKdpCaWkA5L2PwUPxbRe/UI-Startup-MaemYuk?node-id=155-104 |
-| Repositori | https://github.com/MuhammadHumamArij/maemyuk-web.git|
-| Demo (GitHub Pages) | https://muhammadhumamarij.github.io/maemyuk-web/ |
-| PRD (PDF) | PRD.md |
+| PRD | PRD.md |
+| Log prompt Modul 8 | [docs/prompt-log-modul8.md](docs/prompt-log-modul8.md) (memuat bagian Humam dan bagian Nafisa) |
+| Log prompt Modul 7 | [docs/prompt-log.md](docs/prompt-log.md) |
 
 ## Anggota tim
 
-| Anggota | Peran |
+| Anggota | Peran di Modul 8 |
 | --- | --- |
-| Muhammad Humam Arij | Pengembang antarmuka dan alur belanja (Masuk, Katalog, Detail Produk, Keranjang, Checkout) |
-| Nafisa | Pengembang antarmuka halaman pendukung (Daftar, Riwayat, Beranda, Konfirmasi), perapian data Figma, dan PRD |
+| Muhammad Humam Arij | Data dinamis (Supabase, skema, pemuat produk), penyambungan halaman Katalog, Beranda, Detail Produk, dan Keranjang, skeleton dan penanganan galat, deploy, serta dokumentasi. |
+| Nafisa | Form Checkout (validasi dan sanitasi nama), pengiriman pesanan ke database, komponen toast, dan perbaikan refresh di halaman Checkout. Pull Request #16 sudah digabung. |
 
-Rincian kontribusi lengkap ada di bagian [Kontribusi anggota](#kontribusi-anggota).
+Pembagian kerja memakai aturan satu berkas hanya diedit satu orang, sehingga tidak ada konflik di Git. Rincian ada di bagian [Kontribusi anggota](#kontribusi-anggota).
+
+## Sumber data dan layanan
+
+Data disimpan di **Supabase** (database PostgreSQL yang diakses lewat library `@supabase/supabase-js`). Supabase dipilih dibanding MockAPI.io karena memberi database sungguhan dengan aturan akses per tabel, dan pesanan yang dikirim form benar-benar tersimpan. Skema lengkap beserta data awal ada di [supabase/schema.sql](supabase/schema.sql).
+
+| Tabel | Isi | Aturan akses (Row Level Security) |
+| --- | --- | --- |
+| `toko` | Nama, alamat, dan jam tutup toko (6 baris) | Hanya bisa dibaca |
+| `products` | Produk lengkap dengan harga, harga asli, jarak, rating, ulasan, dan gambar (8 baris) | Hanya bisa dibaca |
+| `orders` | Pesanan: nama penerima, metode pembayaran, total, hemat, dan rincian per toko | Hanya bisa ditambah, tidak bisa dibaca publik |
+
+Alur data: halaman memanggil `muatProduk()` di `src/productStore.js`, yang mengambil tabel `products` dan menerjemahkan nama kolom `snake_case` (misalnya `harga_asli`) ke nama yang dipakai komponen (`hargaAsli`). Komponen membaca `productState` (daftar produk, status memuat, dan galat), sehingga tampilan otomatis berganti saat data datang.
+
+Beberapa isian database juga dijaga oleh batasan di sisi database sebagai lapisan kedua di luar validasi di browser: nama penerima 1 sampai 80 karakter, metode pembayaran hanya `bayar-di-tempat`, `kartu-debit`, `qris`, atau `dana`, diskon antara 0 dan 100.
 
 ## Teknologi
 
 | Bagian | Pilihan | Alasan singkat |
 | --- | --- | --- |
-| Framework | Vue 3 (Composition API, `<script setup>`) | Navbar, kartu produk, dan tombol dipakai di banyak layar, jadi cukup ditulis sekali sebagai komponen. State keranjang dibaca beberapa halaman sekaligus. |
+| Framework | Vue 3 (Composition API, `<script setup>`) | Navbar, kartu produk, dan tombol dipakai di banyak layar, jadi cukup ditulis sekali sebagai komponen. |
 | Build tool | Vite | Cepat dan sederhana. |
-| Routing | Vue Router, mode hash | Refresh halaman di GitHub Pages tidak menghasilkan 404. |
+| Routing | Vue Router, mode hash | Refresh halaman di hosting statis tidak menghasilkan 404. |
+| Database | Supabase (PostgreSQL) | Data produk dan pesanan tersimpan sungguhan, dengan aturan akses per tabel. |
 | Gaya | CSS biasa dengan variabel dari token Figma | Tidak memakai library UI, supaya hasil mengikuti Figma. |
-| State | `reactive` sederhana di `src/store.js`, disimpan ke `localStorage` | Skala proyek kecil, Pinia belum diperlukan. |
+| State | `reactive` di `src/productStore.js` (produk) dan `src/store.js` (keranjang, disimpan ke `localStorage`) | Skala proyek kecil, Pinia belum diperlukan. |
 
 ## Cara menjalankan di lokal
 
-Syarat: Node.js 18 ke atas dan Git.
+Syarat: Node.js 18 ke atas, Git, dan akses ke project Supabase (URL dan key diminta dari tim).
 
 ```bash
-git clone <url-repo-ini>
+git clone https://github.com/MuhammadHumamArij/maemyuk-web.git
 cd maemyuk-web
 npm install
-npm run dev
 ```
 
-Buka alamat yang tampil di terminal (biasanya `http://localhost:5173`). Untuk membuat versi produksi dan mencobanya:
+Lalu siapkan variabel lingkungan:
+
+1. Salin `.env.example` menjadi `.env.local` di folder paling luar proyek, sejajar dengan `package.json`.
+2. Isi dua variabel: `VITE_SUPABASE_URL` dan `VITE_SUPABASE_KEY`. Nilainya ada di dashboard Supabase, menu Project Settings, bagian API (pakai key publik, bukan key `service_role`).
+3. Jalankan `npm run dev`, lalu buka alamat yang tampil di terminal (biasanya `http://localhost:5173`).
+
+Vite hanya membaca berkas env saat server dinyalakan, jadi jika nilainya diubah, matikan server lalu jalankan lagi. Untuk membuat versi produksi dan mencobanya:
 
 ```bash
 npm run build
 npm run preview
 ```
 
-Jika muncul pesan `Missing script: dev`, terminal belum berada di folder proyek. Jalankan `cd maemyuk-web` terlebih dahulu. Peringatan `npm audit` setelah `npm install` dapat diabaikan untuk keperluan prototipe ini.
+Jika muncul galat `supabaseUrl is required`, berarti `.env.local` belum terbaca. Periksa letak berkas, nama persis berkasnya, dan nama kedua variabel.
 
-### Aset gambar dan ikon
+## Panduan untuk mentor: halaman dan fitur yang bisa dicoba
 
-Seluruh aset sudah ikut di repositori, jadi tidak perlu disalin manual.
+Link live web: [ISI: link]. Alur utama: Masuk, Beranda, Katalog, Detail Produk, Keranjang, Checkout, Konfirmasi. Login hanya simulasi, jadi isi email berformat benar dan password minimal 6 karakter.
 
-- `public/assets/icons/` berisi ikon dan logo (misalnya `white-logo-maemyuk.svg`, `ikon-cart.svg`, `ikon-filter-tune-no-bg.svg`, `ikon-qris.svg`).
-- `public/assets/images/` berisi foto produk (misalnya `klepon.png`, `ayam-goreng.png`, `dimsum.png`).
+1. **Katalog (data dinamis, search, filter).** Ketik "ayam" di kolom cari, hasilnya 3 produk. Coba chip kategori, buka panel filter untuk mengurutkan (terdekat, rating, diminati), dan pindah ke tab Toko. Ketik kata yang tidak ada, misalnya "xyz", untuk melihat layar "Data Tidak Ditemukan" dan tombol Reset Pencarian.
+2. **Beranda.** Bagian "Rekomendasi makanan hari ini" diambil dari database.
+3. **Detail Produk.** Atur jumlah dengan tombol tambah dan kurang, lalu tekan Masukkan Keranjang atau Beli Sekarang. Membuka alamat produk yang tidak ada mengarahkan kembali ke Katalog.
+4. **Keranjang.** Awalnya kosong. Setelah produk ditambahkan, jumlah, pilihan, dan total berubah langsung dan bertahan setelah refresh.
+5. **Checkout (form).** Tekan Bayar dengan form kosong untuk melihat pesan "Nama penerima wajib diisi." dan "Silakan pilih metode pembayaran." tepat di bawah kolomnya. Nama dirapikan spasinya dan dibatasi 80 karakter. Saat form benar dan Bayar ditekan, tombol berubah menjadi "Mengirim..." dan terkunci supaya tidak terkirim dua kali. Jika berhasil, toast "Pesanan berhasil dibuat!" muncul, keranjang dikosongkan, dan halaman pindah ke Konfirmasi. Pesanan tersimpan di tabel `orders`. Jika gagal, toast "Pesanan gagal disimpan. Silakan coba lagi." muncul dan isi keranjang tetap utuh.
+6. **Melihat kondisi loading dan galat.** Di DevTools, tab Network, pilih throttling "Slow 4G" lalu refresh Katalog, Beranda, atau Keranjang untuk melihat kerangka loading. Centang "Offline" lalu refresh untuk melihat pesan galat dengan tombol Coba lagi.
 
-Berkas di folder `public` dipanggil lewat helper `asset()` di `src/utils.js` dan nama berkasnya dipertahankan sama seperti aslinya. Di GitHub Pages (Linux) nama berkas membedakan huruf besar dan kecil, jadi penulisan nama di kode harus sama persis dengan nama berkas.
+## Kondisi tampilan (UX states)
 
-## Alur dan fitur interaktif
+| Kondisi | Di mana | Perilaku |
+| --- | --- | --- |
+| Skeleton loading | Katalog (6 kartu), Beranda (3 kartu), Keranjang (2 kartu dan rekomendasi) | Kerangka kartu berkilau pelan, berukuran sama dengan kartu produk, berhenti beranimasi jika pengguna mematikan animasi di perangkat |
+| Kosong | Katalog, Keranjang | Layar "Data Tidak Ditemukan" dengan tombol reset, dan layar "Keranjangmu masih kosong" dengan tautan ke Katalog |
+| Galat | Katalog, Beranda, Detail Produk | Pesan "Gagal memuat produk" dengan tombol Coba lagi |
+| Toast | Checkout | Notifikasi sukses dan gagal kirim pesanan, hilang sendiri setelah 3,5 detik, bisa ditutup dengan tombol, dan diumumkan pembaca layar (`role="status"`, `aria-live="polite"`) |
 
-Alur utama: Masuk, Beranda, Katalog, Detail Produk, Keranjang, Checkout, Konfirmasi.
+Selama data dimuat, layar kosong atau galat sengaja tidak ditampilkan lebih dulu, supaya pengguna tidak melihat "Data Tidak Ditemukan" sesaat sebelum produk muncul.
+
+## Keamanan
+
+1. Berkas `.env.local` tidak ikut ke repositori. Aturan `*.local` di `.gitignore` mencegahnya, dan repositori hanya memuat `.env.example` berisi nama variabel tanpa nilai.
+2. Aplikasi memakai key publik Supabase, yang memang tampil di browser. Perlindungan data ada di aturan akses tabel: produk dan toko hanya bisa dibaca, pesanan hanya bisa ditambah. Key `service_role` tidak dipakai.
+3. Input pengguna ditampilkan dengan interpolasi Vue yang otomatis di-escape, tanpa `v-html`.
+4. Saat deploy, variabel env diisi di pengaturan platform hosting, bukan di kode.
+
+## Fitur interaktif
 
 | # | Interaksi | Letak | Perilaku |
 | --- | --- | --- | --- |
-| 1 | Validasi login | Masuk | Tombol Masuk nonaktif sampai email dan password terisi. Email berformat benar dan password minimal 6 karakter dianggap valid. Selain itu muncul kondisi "Email atau password tidak valid" sesuai desain Login Gagal. |
-| 2 | Filter katalog | Katalog | Pencarian, chip kategori, urutan (terdekat, rating, diminati), dan tab Item/Toko saling bekerja. Hasil kosong menampilkan layar "Data Tidak Ditemukan". Filter ikut tersimpan di URL. |
+| 1 | Validasi login | Masuk | Tombol Masuk nonaktif sampai email dan password terisi. Email berformat benar dan password minimal 6 karakter dianggap valid. Selain itu muncul kondisi "Email atau password tidak valid". |
+| 2 | Data, pencarian, dan filter | Katalog, Beranda | Produk dimuat dari Supabase. Pencarian, chip kategori, urutan, dan tab Item/Toko saling bekerja, dan filter ikut tersimpan di URL. |
 | 3 | Keranjang dinamis | Detail Produk, Keranjang | Jumlah bisa ditambah atau dikurangi, item bisa dipilih atau dihapus, dan total berubah langsung. Isi keranjang bertahan setelah refresh. |
-| 4 | Checkout dan pesanan | Checkout, Konfirmasi | Total, hemat, dan voucher dihitung dari item terpilih. Tombol Bayar aktif setelah metode pembayaran dan nama penerima terisi, lalu pesanan dibuat. |
-| 5 | Kode pengambilan | Konfirmasi | Kode per toko baru tampil saat area kode diketuk, dengan ikon centang beranimasi. |
+| 4 | Checkout dan pesanan | Checkout, Konfirmasi | Validasi nama dan metode pembayaran dengan pesan di bawah kolom, tombol terkunci dan berubah menjadi "Mengirim..." saat pesanan dikirim, penyimpanan ke tabel `orders`, lalu toast dan pindah ke Konfirmasi. Keranjang baru dikosongkan setelah database berhasil menyimpan. |
+| 5 | Kode pengambilan | Konfirmasi | Kode per toko tampil saat area kode diketuk, dengan ikon centang beranimasi. |
 | 6 | Lainnya | Beranda, Riwayat, Masuk | Animasi pembuka login (sekali per sesi), hapus riwayat pencarian satu per satu, validasi form Daftar. |
-
-Data awal keranjang sengaja sama dengan desain Figma (1x Klepon, 2x Coro, 3x Lemper) supaya tampilannya bisa dibandingkan langsung. Hasil hitung awal: subtotal Rp 22.500, biaya Rp 2.000, voucher Rp 5.000, total Rp 19.500.
 
 ## Responsif
 
@@ -85,88 +123,89 @@ Dirancang mobile-first dari lebar 360 px (acuan frame Figma), lalu menyesuaikan:
 | Detail Produk | Foto dan informasi berdampingan mulai 768 px |
 | Keranjang dan Checkout | Dua kolom dengan ringkasan menempel mulai 900 px |
 
-Pengujian visual dilakukan pada lebar 360, 768, dan 1280 px.
-
 ## Struktur proyek
 
 ```
 src/
-  components/   AppIcon, BackBar, ProductRow, EmptyState
+  components/   AppIcon, BackBar, ProductRow, SkeletonRow, EmptyState, AppToast
   views/        Login, Daftar, Beranda, Riwayat, Katalog, Detail, Keranjang, Checkout, Konfirmasi
-  data/         products.js (sumber tunggal data produk dan toko)
+  lib/          supabase.js (klien Supabase)
+  data/         products.js (daftar kategori dan alamat toko)
   styles/       tokens.css (token Figma), base.css (tombol, input, grid)
+  productStore.js  pemuat produk dari Supabase (memuat, galat, getProduct)
+  store.js      state keranjang dan pesanan (buildOrder, commitOrder)
+  orderService.js  pengiriman pesanan ke tabel orders
+  toast.js      state dan fungsi notifikasi (showToast)
   utils.js      asset(), rupiah(), diskon(), dan fungsi bantu lain
-  store.js      state keranjang dan pesanan
   router.js     daftar rute (mode hash)
+supabase/
+  schema.sql    tabel, aturan akses, dan data awal
 public/
   assets/       icons/ dan images/
 docs/
-  prompt-log.md log prompt dan perbaikan manual
+  prompt-log.md, prompt-log-modul8.md
+.env.example    nama variabel lingkungan (tanpa nilai)
 ```
-
-## Token desain dari Figma
-
-Warna, jarak, radius, dan Text Styles diambil dari variabel file Figma ke `src/styles/tokens.css`. Warna utama `#0e7490`, font Roboto (judul), Roboto Condensed (teks), dan Lobster (label diskon). Karena Figma paket gratis tidak memiliki Variables lengkap, sebagian token dicatat manual dari Dev Mode dan konektor Figma.
 
 ## Alur kerja Git
 
-Tim memakai satu branch per halaman, dan tidak ada halaman yang di-push langsung ke `main`.
+Tim memakai satu branch per pekerjaan, dan tidak ada yang di-push langsung ke `main`.
 
-1. Mulai dari `main` terbaru: `git checkout main` lalu `git pull`.
-2. Buat branch baru, misalnya `humam/katalog` atau `nafisa/beranda`.
-3. Commit kecil dan deskriptif dengan awalan `feat`, `fix`, `style`, `chore`, atau `docs`.
-4. `npm run build` harus berhasil sebelum push.
-5. Push branch, buka Pull Request, dan minta rekan satu tim sebagai reviewer.
-6. Setelah disetujui, PR di-merge ke `main`, lalu `git pull` di lokal.
+1. Mulai dari branch terbaru, buat branch baru, misalnya `feat/dynamic-data` atau `nafisa/checkout-form`.
+2. Commit kecil dan deskriptif dengan awalan `feat`, `fix`, `refactor`, `docs`, atau `chore`.
+3. `npm run build` harus berhasil sebelum push, dan Console browser diperiksa tanpa peringatan.
+4. Push branch, buka Pull Request, dan minta rekan satu tim sebagai reviewer.
+5. Setelah disetujui, Pull Request digabung. Penggabungan ke `main` dilakukan setelah variabel lingkungan di platform hosting terpasang.
 
-Contoh pesan commit: `feat: tambah filter kategori di halaman Katalog`, `fix: perbaiki path foto produk di halaman Katalog`, `style: sesuaikan ukuran ikon BackBar dengan Figma`.
+Aturan tambahan Modul 8: satu berkas hanya diedit satu orang. Fungsi `placeOrder` di `store.js` dipecah menjadi `buildOrder` dan `commitOrder` supaya bagian form bisa dikerjakan tanpa menyentuh `store.js`.
 
-## Keputusan dan temuan selama konversi
+Contoh pesan commit: `feat: katalog memuat produk dari supabase`, `refactor: keranjang tidak lagi berisi data contoh`, `fix: lengkapi skeleton di keranjang`.
 
-1. Persen diskon dihitung dari harga, tidak ditulis tangan. Ini menemukan Dimsum Ayam di Figma bertuliskan "Disc 25%" padahal Rp 10.000 dari Rp 18.000 adalah sekitar 44%.
-2. Total di layar Checkout dan Konfirmasi Figma tertulis Rp 20.500 dan Hemat 15%, padahal rincian di layar yang sama berjumlah Rp 19.500. Prototipe memakai hasil hitung (Rp 19.500, hemat 60%) dan desain Figma perlu diperbaiki.
-3. Layar "Login Gagal" dan "Data Tidak Ditemukan" diwujudkan sebagai kondisi di halaman Masuk dan Katalog, bukan halaman terpisah.
-4. Nama berkas ikon Google dan Facebook di HTML Modul 6 tidak konsisten (`logo-` dan `ikon-`). Prototipe memakai `ikon-`.
-5. Kolom cari di Beranda hanya pembuka, mengetuknya membuka halaman Riwayat Pencarian, sesuai maksud desain.
-6. Nama platform di wireframe lama masih tertulis MaemSek. Seluruh dokumen dan kode memakai nama MaemYuk.
-7. Sebagian alamat toko dan ulasan adalah data contoh karena Figma tidak memuat data lengkap.
+## Keputusan dan temuan Modul 8
+
+1. Supabase dipilih dibanding MockAPI.io dan JSON statis, karena aturan akses per tabel dan pesanan yang benar-benar tersimpan.
+2. Skema database dibuat dari `products.js` Modul 7, sehingga nama dan data produk sama persis dengan desain.
+3. Keranjang awal dikosongkan. Sebelumnya berisi tiga item contoh dari desain Figma, yang setelah data dinamis tampak seperti barang yang tidak pernah dipilih pembeli.
+4. Penyaring item di `store.js` yang berjalan sebelum produk dimuat dihapus, karena membuat keranjang tersimpan terhapus saat aplikasi menyala.
+5. Halaman Detail dan Keranjang memuat produk sendiri saat dibuka, supaya refresh langsung di halaman itu tetap berfungsi.
+6. Tabel `orders` sengaja tidak bisa dibaca publik, sehingga saat menyimpan pesanan tidak boleh meminta data kembali dari database.
+7. `kategori` dan alamat toko masih dari `src/data/products.js`, belum dipindahkan ke database.
 
 ## Kontribusi anggota
 
 | Anggota | Tugas | Bukti (branch, PR, atau commit) |
 | --- | --- | --- |
-| Muhammad Humam Arij | Penyiapan repo, kerangka proyek Vue, token desain, store keranjang, dan halaman Masuk, Katalog, Detail Produk, Keranjang, Checkout. Perbaikan aset dan ikon. Review PR milik Nafisa. | humam/login humam/katalog humam/checkout humam/produk humam/keranjang humam/checkout humam/konfirmasi|
-| Nafisa | Halaman Daftar, Riwayat, Beranda, dan Konfirmasi. Koreksi data Figma (total Checkout Rp 19.500, label diskon Dimsum 44%). Penyusunan PRD. Review PR milik Humam. | nafisa/feat/prd nafisa/feat/beranda nafisa/feat/riwayat feat/login-auto-focus |
+| Muhammad Humam Arij | Skema dan data awal Supabase, pemuat produk, penyambungan Katalog, Beranda, Detail, dan Keranjang, pemecahan `placeOrder`, skeleton dan galat, deploy, dokumentasi. Review dan merge Pull Request Nafisa. | `feat/dynamic-data`, Pull Request #16 |
+| Nafisa | Validasi dan sanitasi form Checkout, pengiriman pesanan ke Supabase (`orderService.js`), komponen toast, perbaikan refresh di Checkout, dan log prompt. | `nafisa/checkout-form`, Pull Request #16, commit `9b9c4ad` |
 
-Ringkasan jumlah commit (isi dari `git shortlog -sn`): 15
-
-## Log prompt dan perbaikan
-
-Seluruh prompt yang dipakai bersama asisten AI, hasilnya, dan perbaikan manual yang dilakukan sesudahnya dicatat di [docs/prompt-log.md](docs/prompt-log.md).
 
 ## Pengujian
 
 | Pengujian | Hasil |
 | --- | --- |
-| `npm run build` | Berhasil tanpa error |
-| Alur Masuk sampai Konfirmasi | Berjalan tanpa crash |
-| Login dengan data salah | Menampilkan pesan galat, tidak crash |
-| Pencarian katalog tanpa hasil | Menampilkan layar data tidak ditemukan |
-| Responsif 360, 768, 1280 px | Tata letak menyesuaikan |
+| `npm run build` | Berhasil tanpa galat |
+| Pencarian "ayam" di Katalog | 3 produk tampil |
+| Pencarian tanpa hasil | Layar "Data Tidak Ditemukan" tampil |
+| Refresh di halaman Keranjang dan Detail | Isi keranjang dan produk tetap tampil, tidak terlempar |
+| Alamat produk tidak ada (`#/produk/ngawur`) | Diarahkan ke Katalog |
+| Jaringan "Slow 4G" | Kerangka loading tampil di Katalog, Beranda, dan Keranjang |
+| Mode "Offline" | Pesan galat dan tombol Coba lagi tampil, data muncul setelah jaringan kembali |
+| Form Checkout | Nama kosong dan metode belum dipilih menampilkan pesan, nama 81 karakter ditolak, klik ganda hanya menyimpan satu pesanan, internet mati menampilkan toast gagal dan keranjang utuh, pesanan sukses muncul di tabel `orders` |
+| Link live web | [ISI: filter dan submit form berjalan tanpa galat] |
 
-Selain uji manual di browser, versi awal kerangka proyek diuji dengan skrip Playwright (57 pemeriksaan lolos) sebelum perubahan lanjutan dari tiap anggota.
+## Deploy
 
-## Deploy ke GitHub Pages
+Deploy memakai Netify. `vite.config.js` memakai `base: './'` dan router mode hash, jadi hasil build bisa dibuka tanpa pengaturan rute tambahan.
 
-`vite.config.js` memakai `base: './'` dan router mode hash, jadi hasil build bisa dipublikasikan dari folder `dist` tanpa pengaturan nama repo.
-
-1. Jalankan `npm run build`.
-2. Publikasikan isi folder `dist` (misalnya lewat GitHub Actions atau cabang `gh-pages`).
-3. Di pengaturan repo, aktifkan GitHub Pages dan salin tautannya ke bagian atas README ini.
+1. Impor repositori ke platform, pilih branch `main`.
+2. Perintah build `npm run build`, folder keluaran `dist`.
+3. Isi dua variabel lingkungan di pengaturan platform: `VITE_SUPABASE_URL` dan `VITE_SUPABASE_KEY`.
+4. Setelah tayang, uji link publik: filter di Katalog dan pengiriman form harus berjalan tanpa galat.
 
 ## Keterbatasan
 
-1. Data produk, toko, dan ulasan bersifat statis (`src/data/products.js`), belum terhubung ke server.
-2. Pembayaran dan login hanya simulasi di sisi klien.
-3. Pesanan disimpan di peramban (localStorage), sehingga hilang jika data situs dihapus.
-4. Sebagian detail Figma yang tidak konsisten diperbaiki di kode, sedangkan berkas Figma masih perlu disamakan.
+1. `kategori` dan alamat toko masih dari berkas lokal, sedangkan produk dan ulasan dari database.
+2. Login hanya simulasi di sisi klien, belum memakai autentikasi sungguhan.
+3. Siapa pun yang memegang key publik bisa menambah pesanan, karena belum ada autentikasi atau pembatasan jumlah permintaan. Pembacaan pesanan tetap ditutup.
+4. Stok produk belum berkurang saat pesanan dibuat.
+5. Sebagian alamat toko dan ulasan adalah data contoh.
