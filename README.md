@@ -6,7 +6,7 @@ Proyek ini adalah **Modul 8: Data Dinamis dan Logika Aplikasi** dari program mag
 
 | Informasi | Tautan |
 | --- | --- |
-| Link live web | [ISI: link Vercel/Netlify setelah deploy] |
+| Link live web | https://maemyuk.netlify.app/ |
 | Repositori | https://github.com/MuhammadHumamArij/maemyuk-web.git |
 | Desain Figma | https://www.figma.com/design/8AKKdpCaWkA5L2PwUPxbRe/UI-Startup-MaemYuk?node-id=155-104 |
 | PRD | PRD.md |
