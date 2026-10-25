@@ -10,7 +10,7 @@ Proyek ini adalah **Modul 8: Data Dinamis dan Logika Aplikasi** dari program mag
 | Repositori | https://github.com/MuhammadHumamArij/maemyuk-web.git |
 | Desain Figma | https://www.figma.com/design/8AKKdpCaWkA5L2PwUPxbRe/UI-Startup-MaemYuk?node-id=155-104 |
 | PRD | PRD.md |
-| Log prompt Modul 8 | [docs/prompt-log-modul8.md](docs/prompt-log-modul8.md) (memuat bagian Humam dan bagian Nafisa) |
+| Log prompt Modul 8 | [docs/prompt-log-modul8.md](docs/prompt-log-modul8.md) |
 | Log prompt Modul 7 | [docs/prompt-log.md](docs/prompt-log.md) |
 
 ## Anggota tim
