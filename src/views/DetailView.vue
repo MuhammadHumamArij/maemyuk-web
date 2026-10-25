@@ -1,14 +1,26 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AppIcon from '../components/AppIcon.vue'
 import BackBar from '../components/BackBar.vue'
-import { getProduct, toko } from '../data/products'
+import { toko } from '../data/products'
+import { productState, muatProduk, getProduct } from '../productStore'
 import { addToCart, buyNow } from '../store'
 import { asset, diskon, rupiah } from '../utils'
 
 const route = useRoute()
 const router = useRouter()
+
+onMounted(() => {
+  if (!productState.items.length) muatProduk()
+})
+
+watch(
+  () => productState.loading,
+  (memuat) => {
+    if (!memuat && !product.value && !productState.error) router.replace('/katalog')
+  },
+)
 
 const product = computed(() => getProduct(route.params.id))
 if (!product.value) router.replace('/katalog')
@@ -102,6 +114,11 @@ function beliSekarang() {
         </section>
       </div>
     </main>
+  </div>
+  <p v-else-if="productState.loading" class="container muted" role="status">Memuat produk...</p>
+  <div v-else-if="productState.error" class="container" role="alert">
+    <p>{{ productState.error }}</p>
+    <button type="button" class="btn btn--secondary btn--sm" @click="muatProduk">Coba lagi</button>
   </div>
 </template>
 

@@ -1,15 +1,20 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import AppIcon from '../components/AppIcon.vue'
 import BackBar from '../components/BackBar.vue'
 import ProductRow from '../components/ProductRow.vue'
 import { lines, selectedLines, summary, setQty, removeItem, toggleSelected, cart } from '../store'
-import { products } from '../data/products'
+import { productState, muatProduk } from '../productStore'
 import { asset, groupByToko, rupiah } from '../utils'
+import SkeletonRow from '../components/SkeletonRow.vue'
+
+onMounted(() => {
+  if (!productState.items.length) muatProduk()
+})
 
 // Interaksi 3: jumlah, pilihan, dan total berubah langsung (state reaktif di store).
 const grup = computed(() => groupByToko(lines.value))
-const rekomendasi = computed(() => products.filter((p) => !cart.items.some((i) => i.id === p.id)).slice(0, 4))
+const rekomendasi = computed(() => productState.items.filter((p) => !cart.items.some((i) => i.id === p.id)).slice(0, 4))
 const jumlahTerpilih = computed(() => selectedLines.value.reduce((s, l) => s + l.qty, 0))
 </script>
 
@@ -58,7 +63,13 @@ const jumlahTerpilih = computed(() => selectedLines.value.reduce((s, l) => s + l
         </div>
       </section>
 
-      <section v-else class="kosong" role="status">
+      <section v-else-if="productState.loading" class="daftar" aria-label="Memuat keranjang">
+        <p class="sr-only" role="status">Memuat keranjang...</p>
+        <ul class="product-grid" aria-hidden="true">
+          <li v-for="n in 2" :key="n"><SkeletonRow /></li>
+        </ul>
+      </section>
+      <section v-else-if="!productState.loading" class="kosong" role="status">
         <h2 class="text-heading3">Keranjangmu masih kosong</h2>
         <p class="muted">Yuk cari makanan surplus yang masih layak dan lebih hemat.</p>
         <RouterLink to="/katalog" class="btn btn--primary">Lihat Katalog</RouterLink>
@@ -80,7 +91,10 @@ const jumlahTerpilih = computed(() => selectedLines.value.reduce((s, l) => s + l
       <section class="rek" aria-labelledby="h-rek">
         <div class="divider"></div>
         <h2 id="h-rek" class="text-heading3">Rekomendasi Menu Lain</h2>
-        <ul class="product-grid">
+        <ul v-if="productState.loading" class="product-grid" aria-hidden="true">
+          <li v-for="n in 2" :key="n"><SkeletonRow /></li>
+        </ul>
+        <ul v-else class="product-grid">
           <li v-for="p in rekomendasi" :key="p.id"><ProductRow :product="p" /></li>
         </ul>
       </section>
