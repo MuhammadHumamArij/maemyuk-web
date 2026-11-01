@@ -40,15 +40,22 @@ const aneka = [
         <ul class="top__nav">
           <li>
             <RouterLink to="/keranjang" class="top__cart">
-              <img :src="asset('icons/ikon-cart.svg')" alt="Keranjang" width="19" height="19" />
+              <img :src="asset('icons/ikon-cart-no-bg.svg')" alt="Keranjang" width="19" height="19" />
               <span v-if="cartCount" class="top__badge" aria-label="isi keranjang">{{ cartCount }}</span>
             </RouterLink>
           </li>
           <li>
-            <a href="#/beranda" @click.prevent><img :src="asset('icons/ikon-location.svg')" alt="Lokasi" width="15" height="22" /></a>
-          </li>
+  <RouterLink to="/katalog" aria-label="Cari warung dan makanan di katalog">
+    <img
+      :src="asset('icons/ikon-location.svg')"
+      alt=""
+      width="15"
+      height="22"
+    />
+  </RouterLink>
+</li>
           <li>
-            <RouterLink to="/masuk"><img :src="asset('icons/ikon-user.svg')" alt="Akun" width="23" height="23" /></RouterLink>
+            <RouterLink to="/profil" aria-label="Buka profil saya"><img :src="asset('icons/ikon-user.svg')" alt="Akun" width="23" height="23" /></RouterLink>
           </li>
         </ul>
       </nav>
