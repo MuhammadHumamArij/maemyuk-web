@@ -8,6 +8,7 @@ import DetailView from './views/DetailView.vue'
 import KeranjangView from './views/KeranjangView.vue'
 import CheckoutView from './views/CheckoutView.vue'
 import KonfirmasiView from './views/KonfirmasiView.vue'
+import ProfilView from './views/ProfilView.vue'
 
 // Mode hash supaya refresh di GitHub Pages tidak menghasilkan 404.
 export default createRouter({
@@ -23,6 +24,7 @@ export default createRouter({
     { path: '/keranjang', name: 'keranjang', component: KeranjangView, meta: { title: 'Keranjang' } },
     { path: '/checkout', name: 'checkout', component: CheckoutView, meta: { title: 'Checkout' } },
     { path: '/konfirmasi', name: 'konfirmasi', component: KonfirmasiView, meta: { title: 'Transaksi Berhasil' } },
+    { path: '/profil', name: 'profil', component: ProfilView, meta: { title: 'Profil Saya' } },
     { path: '/:pathMatch(.*)*', redirect: '/masuk' },
   ],
   scrollBehavior: () => ({ top: 0 }),
