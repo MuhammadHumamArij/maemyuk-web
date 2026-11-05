@@ -68,12 +68,12 @@ onMounted(() => {
   <div class="login">
     <div v-if="intro" class="intro" aria-hidden="true">
       <span class="intro__dot"></span>
-      <img class="intro__logo" :src="asset('icon/white-logo-maemyuk.svg')" alt="" />
+      <img class="intro__logo" :src="asset('icon/white-logo-maemyuk.webp')" alt="" />
     </div>
 
     <header class="login__hero">
       <RouterLink to="/beranda" class="login__logo">
-        <img :src="asset('icons/white-logo-maemyuk.svg')" alt="MaemYuk, ke beranda" width="134" height="133" />
+        <img :src="asset('icons/white-logo-maemyuk.webp')" alt="MaemYuk, ke beranda" width="134" height="133" />
       </RouterLink>
       <p class="text-heading1">Selamat datang di<br />MaemYuk</p>
       <p class="text-body login__tagline">

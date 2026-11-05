@@ -34,7 +34,7 @@ const aneka = [
   <div class="container">
     <header class="top">
       <RouterLink to="/beranda">
-        <img :src="asset('icons/horizontal-logo-maemyuk.svg')" alt="MaemYuk, ke beranda" width="96" height="35" />
+        <img :src="asset('icons/horizontal-logo-maemyuk.webp')" alt="MaemYuk, ke beranda" width="96" height="35" />
       </RouterLink>
       <nav aria-label="Navigasi utama">
         <ul class="top__nav">
@@ -45,7 +45,7 @@ const aneka = [
             </RouterLink>
           </li>
           <li>
-  <RouterLink to="/katalog" aria-label="Cari warung dan makanan di katalog">
+  <RouterLink aria-label="Cari warung dan makanan di katalog">
     <img
       :src="asset('icons/ikon-location.svg')"
       alt=""
