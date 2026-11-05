@@ -41,7 +41,7 @@ function daftar() {
         <img :src="asset('icons/ikon-chevron-left.svg')" alt="Kembali ke halaman masuk" width="15" height="26" />
       </RouterLink>
       <RouterLink to="/beranda">
-        <img :src="asset('icons/white-logo-maemyuk.svg')" alt="MaemYuk, ke beranda" width="134" height="133" class="daftar__logo" />
+        <img :src="asset('icons/white-logo-maemyuk.webp')" alt="MaemYuk, ke beranda" width="134" height="133" class="daftar__logo" />
       </RouterLink>
       <p class="text-heading1">Selamat datang di MaemYuk</p>
     </header>
