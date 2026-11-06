@@ -118,6 +118,9 @@ function daftar() {
         <button type="button"><img :src="asset('icons/logo-google.svg')" alt="Daftar dengan Google" width="32" height="32" /></button>
         <button type="button"><img :src="asset('icons/logo-facebook.svg')" alt="Daftar dengan Facebook" width="32" height="32" /></button>
       </div>
+      <p class="daftar__privasi">
+        Web ini memakai Microsoft Clarity untuk memahami cara penggunaan web demi perbaikan layanan.
+      </p>
     </main>
   </div>
 </template>
@@ -226,5 +229,12 @@ function daftar() {
   border: 0;
   padding: 0;
   background: none;
+}
+.daftar__privasi {
+  text-align: center;
+  font-size: 11px;
+  line-height: 15px;
+  color: #6b7280;
+  padding: 12px 16px 16px;
 }
 </style>

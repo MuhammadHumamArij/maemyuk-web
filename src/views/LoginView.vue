@@ -135,6 +135,10 @@ onMounted(() => {
         Belum punya akun?
         <RouterLink to="/daftar"><strong>Daftar Sekarang</strong></RouterLink>
       </p>
+
+      <p class="login__privasi">
+        Web ini memakai Microsoft Clarity untuk memahami cara penggunaan web demi perbaikan layanan.
+      </p>
     </main>
   </div>
 </template>
@@ -225,6 +229,14 @@ onMounted(() => {
   font-size: 12px;
   line-height: 16px;
   padding-bottom: 16px;
+}
+
+.login__privasi {
+  text-align: center;
+  font-size: 11px;
+  line-height: 15px;
+  color: #6b7280;
+  padding: 0 16px 16px;
 }
 
 /* Layar lebar: panel merek di kiri, formulir di kanan */
