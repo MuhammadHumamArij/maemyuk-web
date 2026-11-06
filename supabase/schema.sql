@@ -46,7 +46,13 @@ alter table public.orders enable row level security;
 
 create policy "toko boleh dibaca publik" on public.toko for select to anon using (true);
 create policy "products boleh dibaca publik" on public.products for select to anon using (true);
-create policy "orders boleh dibuat publik" on public.orders for insert to anon with check (true);
+create policy "orders boleh dibuat publik" on public.orders for insert to anon
+with check (
+  case when jsonb_typeof(toko) = 'array'
+       then jsonb_array_length(toko) between 1 and 50
+       else false end
+  and total between 0 and 100000000
+);
 
 -- 5. Data awal 
 insert into public.toko (nama, alamat, tutup) values
