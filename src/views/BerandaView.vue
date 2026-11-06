@@ -45,7 +45,7 @@ const aneka = [
             </RouterLink>
           </li>
           <li>
-  <RouterLink aria-label="Cari warung dan makanan di katalog">
+  <RouterLink to="/beranda" aria-label="Cari warung dan makanan di katalog">
     <img
       :src="asset('icons/ikon-location.svg')"
       alt=""
