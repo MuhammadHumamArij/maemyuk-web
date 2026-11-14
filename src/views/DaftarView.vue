@@ -4,10 +4,13 @@ import { reactive, ref, computed, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import AppIcon from '../components/AppIcon.vue'
 import { asset } from '../utils'
+import { daftarAkun } from '../auth'
 
 const router = useRouter()
 const form = reactive({ username: '', email: '', password: '', konfirmasi: '', peran: '' })
 const dicoba = ref(false)
+const memuat = ref(false)
+const galatServer = ref('')
 
 // Referensi untuk autofokus kolom username
 const usernameInput = ref(null)
@@ -28,9 +31,31 @@ const galat = computed(() => ({
 }))
 const valid = computed(() => Object.values(galat.value).every((g) => g === ''))
 
-function daftar() {
+async function daftar() {
   dicoba.value = true
-  if (valid.value) router.push('/beranda')
+  galatServer.value = ''
+  if (!valid.value || memuat.value) return
+  memuat.value = true
+  try {
+    const hasil = await daftarAkun({
+      username: form.username.trim(),
+      email: form.email.trim(),
+      password: form.password,
+      peran: form.peran,
+    })
+    if (hasil.session) {
+      router.push('/beranda')
+    } else {
+      // Terjadi bila verifikasi email aktif di Supabase: akun dibuat tetapi belum bisa masuk.
+      galatServer.value = 'Akun dibuat. Cek email untuk konfirmasi, lalu masuk.'
+    }
+  } catch (err) {
+    galatServer.value = /already|registered/i.test(err?.message ?? '')
+      ? 'Email ini sudah terdaftar'
+      : 'Pendaftaran gagal, coba lagi'
+  } finally {
+    memuat.value = false
+  }
 }
 </script>
 
@@ -110,7 +135,9 @@ function daftar() {
           <p v-if="dicoba && galat.peran" class="error-text" role="alert">{{ galat.peran }}</p>
         </fieldset>
 
-        <button type="submit" class="btn btn--primary">Daftar</button>
+        <p v-if="galatServer" class="error-text" role="alert">{{ galatServer }}</p>
+
+        <button type="submit" class="btn btn--primary" :disabled="memuat">Daftar</button>
       </form>
 
       <p class="daftar__atau"><span>Atau</span></p>
