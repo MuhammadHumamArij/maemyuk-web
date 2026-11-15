@@ -1,10 +1,4 @@
--- Migrasi autentikasi: tabel profiles, kepemilikan pesanan, dan RLS berbasis akun.
---
--- URUTAN PENERAPAN (penting):
--- 1. Di dashboard Supabase, matikan "Confirm email" (Authentication > Sign In / Providers > Email).
--- 2. Deploy kode baru (branch feat/auth) lebih dulu.
--- 3. Baru jalankan file ini di SQL Editor. Aturan insert anon di orders dicabut di sini,
---    jadi checkout versi lama berhenti bisa menyimpan pesanan begitu file ini dijalankan.
+-- Migrasi autentikasi: tabel profiles, kepemilikan pesanan, dan RLS berbasis akun
 
 -- 1. Tabel profiles: satu baris per akun, berisi username dan peran.
 create table if not exists public.profiles (
