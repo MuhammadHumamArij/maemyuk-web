@@ -1,32 +1,43 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import AppIcon from '../components/AppIcon.vue'
 import { asset } from '../utils'
+import { masukAkun } from '../auth'
 
 const router = useRouter()
+const route = useRoute()
 const email = ref('')
 const password = ref('')
 const gagal = ref(false)
+const memuat = ref(false)
 
 // Referensi untuk autofokus kolom email
 const emailInput = ref(null)
 
 // Interaksi 1: tombol Masuk nonaktif sampai kedua field terisi.
-const bisaMasuk = computed(() => email.value.trim() !== '' && password.value !== '')
+const bisaMasuk = computed(() => email.value.trim() !== '' && password.value !== '' && !memuat.value)
 
-const emailValid = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
+// Tujuan setelah login: halaman yang tadi diminta (query next), hanya jalur internal.
+const tujuan = () => {
+  const next = String(route.query.next ?? '')
+  return next.startsWith('/') && !next.startsWith('//') ? next : '/beranda'
+}
 
-// Aturan prototipe: email berformat benar dan password minimal 6 karakter dianggap valid.
-// Selain itu tampil layar "Login Gagal" dari Figma sebagai kondisi di halaman yang sama.
-function masuk() {
+// Login lewat Supabase Auth. Email atau password yang tidak cocok dengan akun terdaftar
+// menampilkan layar "Login Gagal" dari Figma sebagai kondisi di halaman yang sama.
+async function masuk() {
   if (!bisaMasuk.value) return
-  if (emailValid(email.value.trim()) && password.value.length >= 6) {
+  memuat.value = true
+  try {
+    await masukAkun(email.value.trim(), password.value)
     gagal.value = false
-    router.push('/beranda')
-  } else {
+    router.push(tujuan())
+  } catch {
     gagal.value = true
+  } finally {
+    memuat.value = false
   }
 }
 

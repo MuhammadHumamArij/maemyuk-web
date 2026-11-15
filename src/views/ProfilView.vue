@@ -1,26 +1,32 @@
 <script setup>
 
 import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
 import { asset } from '../utils'
+import { auth, keluarAkun } from '../auth'
 
+const router = useRouter()
 const PROFILE_STORAGE_KEY = 'maemyuk-profile'
 
-const defaultProfile = {
-  name: 'Asep',
-  email: 'asepganteng@gmail.com',
+// Nama dan email berasal dari akun yang sedang login. Alamat masih disimpan di browser.
+const defaultProfile = () => ({
+  name: auth.username || 'Pengguna',
+  email: auth.user?.email ?? '',
   address: 'Tegal, Jawa Tengah',
-}
+})
 
 function loadProfile() {
   try {
     const saved = localStorage.getItem(PROFILE_STORAGE_KEY)
+    const akun = defaultProfile()
 
+    // Email selalu mengikuti akun yang login, bukan data tersimpan.
     return saved
-      ? { ...defaultProfile, ...JSON.parse(saved) }
-      : { ...defaultProfile }
+      ? { ...akun, ...JSON.parse(saved), email: akun.email }
+      : akun
   } catch (error) {
     console.error('Gagal membaca profil:', error)
-    return { ...defaultProfile }
+    return defaultProfile()
   }
 }
 
@@ -53,8 +59,15 @@ function toggleMenu(menu) {
   activeMenu.value = activeMenu.value === menu ? '' : menu
 }
 
-function logout() {
-  alert('Fitur keluar akan dihubungkan dengan Supabase Auth.')
+async function logout() {
+  await keluarAkun()
+  try {
+    // Data profil lokal milik akun ini dihapus agar tidak terbaca akun berikutnya di browser yang sama.
+    localStorage.removeItem(PROFILE_STORAGE_KEY)
+  } catch {
+    /* abaikan */
+  }
+  router.push('/masuk')
 }
 
 </script>
