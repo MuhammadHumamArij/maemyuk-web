@@ -10,8 +10,13 @@ import CheckoutView from './views/CheckoutView.vue'
 import KonfirmasiView from './views/KonfirmasiView.vue'
 import ProfilView from './views/ProfilView.vue'
 
+import { auth, siapAuth } from './auth'
+
+// Halaman yang hanya bisa dibuka setelah login.
+const WAJIB_LOGIN = ['checkout', 'konfirmasi', 'profil']
+
 // Mode hash supaya refresh di GitHub Pages tidak menghasilkan 404.
-export default createRouter({
+const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     { path: '/', redirect: '/masuk' },
@@ -29,3 +34,16 @@ export default createRouter({
   ],
   scrollBehavior: () => ({ top: 0 }),
 })
+
+router.beforeEach(async (to) => {
+  await siapAuth
+  const sudahMasuk = Boolean(auth.user)
+  if (WAJIB_LOGIN.includes(to.name) && !sudahMasuk) {
+    return { name: 'masuk', query: { next: to.fullPath } }
+  }
+  if ((to.name === 'masuk' || to.name === 'daftar') && sudahMasuk) {
+    return { name: 'beranda' }
+  }
+})
+
+export default router
